@@ -30,14 +30,11 @@ Feature: CatFactsAPI Testing
     Given the facts endpoint
     When a request is made without parameters
     Then it should return paginated facts
-#   Scenario:
-#     Given the facts endpoint
-#     When data is retrieved
-#     Then it should have proper pagination structure
-#   Scenario:
-#     Given the facts endpoint
-#     When first page is requested
-#     Then prev_page_url should be null
+
+  Scenario: First page's prev_page_url should be null
+    Given the facts endpoint
+    When first page is requested
+    Then prev_page_url should be null
 #   Scenario:
 #     Given the facts endpoint
 #     When second page is requested

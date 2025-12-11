@@ -87,7 +87,7 @@ When('a request is made without parameters', () => {
 })
 
 Then('it should return paginated facts', () => {
-   cy.get("@apiResponse").then((response) => {
+    cy.get("@apiResponse").then((response) => {
         expect(response.status).to.eq(200);
         expect(response.body).to.have.property('data');
         expect(response.body).to.have.property('current_page');
@@ -95,6 +95,18 @@ Then('it should return paginated facts', () => {
         expect(response.body.data).to.be.an('array');
         expect(response.body.current_page).to.be.a('number');
         expect(response.body.last_page).to.be.a('number');
+    });
+})
+
+When('first page is requested', () => {
+    cy.get("@endpoint").then((endpoint) => {
+        cy.request(`${endpoint}?page=1`).as("apiResponse");
+    });
+})
+
+Then('prev_page_url should be null', () => {
+    cy.get("@apiResponse").then((response) => {
+        expect(response.body).to.have.property('prev_page_url', null);
     });
 })
 
