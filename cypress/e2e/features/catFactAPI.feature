@@ -8,7 +8,7 @@ Feature: CatFactsAPI Testing
 
   Scenario: length property matches fact text length
     Given the fact endpoint
-    When a fact is retrieved
+    When a request is made
     Then the length property should match the fact text length
 
 #   Scenario: Validate the structure of the response

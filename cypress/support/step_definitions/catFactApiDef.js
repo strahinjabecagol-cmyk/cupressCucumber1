@@ -24,4 +24,11 @@ Then('it should return a single cat fact with valid structure', () => {
 });
 
 
+Then('the length property should match the fact text length', () => {
+    cy.get("@apiResponse").then((response) => {
+        const factText = response.body.fact;
+        const lengthValue = response.body.length;
+        expect(factText.length).to.eq(lengthValue);
+    });
+});
 
