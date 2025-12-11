@@ -32,3 +32,34 @@ Then('the length property should match the fact text length', () => {
     });
 });
 
+Then('the length should be a positive number', () => {
+    cy.get("@apiResponse").then((response) => {
+        const lengthValue = response.body.length;
+        expect(lengthValue).to.be.greaterThan(0);
+    });
+})
+
+Then('it should return different facts', () => {
+    Then('it should return different facts', () => {
+        const facts = [];
+
+        cy.get("@apiResponse1").then(r => facts.push(r.body.fact));
+        cy.get("@apiResponse2").then(r => facts.push(r.body.fact));
+        cy.get("@apiResponse3").then(r => facts.push(r.body.fact));
+
+        cy.then(() => {
+            expect(facts[0]).to.not.eq(facts[1]);
+            expect(facts[0]).to.not.eq(facts[2]);
+            expect(facts[1]).to.not.eq(facts[2]);
+        });
+    });
+});
+
+When('multiple requests are made', () => {
+    cy.get("@endpoint").then((endpoint) => {
+        cy.request(endpoint).as("apiResponse1");
+        cy.request(endpoint).as("apiResponse2");
+        cy.request(endpoint).as("apiResponse3");
+    })
+})
+
