@@ -33,13 +33,15 @@ Feature: CatFactsAPI Testing
 
   Scenario: First page's prev_page_url should be null
     Given the facts endpoint
-    When first page is requested
+    When page "1" is requested
     Then prev_page_url should be null
-#   Scenario:
-#     Given the facts endpoint
-#     When second page is requested
-#     Then it should have both prev and next URLs
-#   Scenario:
-#     Given the facts endpoint
-#     When limit parameter is provided
-#     Then it should return specified number of facts
+
+  Scenario: Second page should have both prev and next URLs
+    Given the facts endpoint
+    When page "2" is requested
+    Then it should have both prev and next URLs
+
+  Scenario: Limit parameter should control number of facts returned
+    Given the facts endpoint
+    When limit parameter is provided
+    Then it should return specified number of facts

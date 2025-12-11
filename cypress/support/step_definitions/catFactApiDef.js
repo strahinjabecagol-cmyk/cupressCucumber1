@@ -98,9 +98,9 @@ Then('it should return paginated facts', () => {
     });
 })
 
-When('first page is requested', () => {
+When('page {string} is requested', (pageNumber) => {
     cy.get("@endpoint").then((endpoint) => {
-        cy.request(`${endpoint}?page=1`).as("apiResponse");
+        cy.request(`${endpoint}?page=${pageNumber}`).as("apiResponse");
     });
 })
 
@@ -109,5 +109,24 @@ Then('prev_page_url should be null', () => {
         expect(response.body).to.have.property('prev_page_url', null);
     });
 })
+
+Then('it should have both prev and next URLs', () => {
+    cy.get("@apiResponse").then((response) => {
+        expect(response.body).to.have.property('prev_page_url').that.is.not.null;
+        expect(response.body).to.have.property('next_page_url').that.is.not.null;
+    });
+})
+
+Then('it should return specified number of facts', () => {
+    cy.get("@apiResponse").then((response) => {
+        expect(response.body.data.length).to.eq(5);
+    });
+});
+
+When('limit parameter is provided', () => {
+    cy.get("@endpoint").then((endpoint) => {
+        cy.request(`${endpoint}?limit=5`).as("apiResponse");
+    });
+});
 
 
