@@ -76,4 +76,26 @@ When('max_length parameter is set to {string}', (max_length) => {
     })
 })
 
+Given('the facts endpoint', () => {
+    cy.wrap(`${baseUrl}/facts`).as("endpoint");
+})
+
+When('a request is made without parameters', () => {
+    cy.get("@endpoint").then((endpoint) => {
+        cy.request(endpoint).as("apiResponse");
+    })
+})
+
+Then('it should return paginated facts', () => {
+   cy.get("@apiResponse").then((response) => {
+        expect(response.status).to.eq(200);
+        expect(response.body).to.have.property('data');
+        expect(response.body).to.have.property('current_page');
+        expect(response.body).to.have.property('last_page');
+        expect(response.body.data).to.be.an('array');
+        expect(response.body.current_page).to.be.a('number');
+        expect(response.body.last_page).to.be.a('number');
+    });
+})
+
 

@@ -25,10 +25,11 @@ Feature: CatFactsAPI Testing
     Given the fact endpoint
     When max_length parameter is set to "40"
     Then fact should not exceed max length of "40"
-#   Scenario: When no parameters are provided results should be paginated
-#     Given the facts endpoint
-#     When a request is made without parameters
-#     Then it should return paginated facts
+
+  Scenario: When no parameters are provided results should be paginated
+    Given the facts endpoint
+    When a request is made without parameters
+    Then it should return paginated facts
 #   Scenario:
 #     Given the facts endpoint
 #     When data is retrieved
