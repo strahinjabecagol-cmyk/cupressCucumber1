@@ -63,3 +63,17 @@ When('multiple requests are made', () => {
     })
 })
 
+Then('fact should not exceed max length of {string}', (max_length) => {
+    cy.get("@apiResponse").then((response) => {
+        const factText = response.body.fact;
+        expect(factText.length).to.be.at.most(Number(max_length));
+    });
+})
+
+When('max_length parameter is set to {string}', (max_length) => {
+    cy.get("@endpoint").then((endpoint) => {
+        cy.request(`${baseUrl}/fact?max_length=${max_length}`).as("apiResponse");
+    })
+})
+
+
