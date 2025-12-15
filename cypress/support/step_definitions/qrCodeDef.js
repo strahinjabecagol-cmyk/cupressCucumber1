@@ -26,16 +26,44 @@ When('I scan the QR code', () => {
 });
 
 
-When('I Generate a qrcode for an url {string}', (s) => {
+When('I Generate a qrcode for text {string}', (s) => {
   cy.get("input[type=text]").type(s);
   cy.get("button").click();
+  cy.wrap(s).as("inputValue")
 })
 
 
 Then('I should see the correct string returned', () => {
-  cy.readQRCode('./cypress/screenshots/qr-code.png').then((text) => {
-    cy.wrap(text).should("equal", "https://qaplayground.dev/apps/qr-code-generator/");
+  cy.get("@inputValue").then((inputValue) => {
+    cy.readQRCode('./cypress/screenshots/qr-code.png').then((actualQRcodeValue) => {
+      cy.wrap(actualQRcodeValue).should("equal", inputValue);
+    });
   });
 });
+
+When('I Generate a qrcode for {string} characters', (s) => {
+  const longText = 'A'.repeat(s);
+  cy.get("input[type=text]").type(longText);
+  cy.get("button").click();
+  cy.wrap(longText).as("inputValue");
+});
+
+Then('The QR code container should be not visible', () => {
+  cy.get(".qr-code").should('not.be.visible')
+});
+
+When('I click generate without input', () => {
+  cy.get('button').click();
+});
+
+Then('the QR code should not be displayed', () => {
+  cy.get('.qr-code').should('not.be.visible');
+});
+
+Then('I clear the input field', () => {
+   cy.get("input[type=text]").clear();
+})
+
+
 
 
