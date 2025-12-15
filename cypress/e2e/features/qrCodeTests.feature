@@ -1,4 +1,4 @@
-Feature: tetingQR code with cypress and cucumber
+Feature: testingQR code with cypress and cucumber
 ###QR Code Scenarios###
 
   Scenario: Generate and scan QR code
