@@ -11,10 +11,14 @@ const jsQR = require("jsqr");
 const fs = require("fs");
 const path = require("path");
 
+// Store the last screenshot path captured by the after:screenshot event
+let lastScreenshotPath = null;
+
 module.exports = defineConfig({
   e2e: {
     specPattern: "**/*.feature",
-
+    viewportWidth: 1280,
+    viewportHeight: 720,
     async setupNodeEvents(on, config) {
       await addCucumberPreprocessorPlugin(on, config);
 
@@ -24,6 +28,12 @@ module.exports = defineConfig({
           plugins: [createEsbuildPlugin(config)],
         })
       );
+
+      // Capture the actual screenshot path after each screenshot is taken
+      on("after:screenshot", (details) => {
+        lastScreenshotPath = details.path;
+        return details;
+      });
 
       on("task", {
         async readQRCode(filePath) {
@@ -38,6 +48,17 @@ module.exports = defineConfig({
           }
 
           return code.data;
+        },
+
+        // Get the last captured screenshot path
+        getLastScreenshotPath() {
+          return lastScreenshotPath;
+        },
+
+        // Clear the stored screenshot path (useful for test cleanup)
+        clearLastScreenshotPath() {
+          lastScreenshotPath = null;
+          return null;
         },
       });
 

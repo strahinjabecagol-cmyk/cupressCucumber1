@@ -13,16 +13,22 @@ When('I generate the text in the QR code field', () => {
 });
 
 Then('I should see the correct number returned', () => {
-  cy.readQRCode('./cypress/screenshots/qr-code.png').then((text) => {
-    cy.log(text);
-
+  cy.get("@screenshotPath").then((screenshotPath) => {
+    cy.task("readQRCode", screenshotPath).then((text) => {
+      cy.log(text);
+    });
   });
 });
 
 When('I scan the QR code', () => {
+  const screenshotName = `qr-code-${Date.now()}`;
   cy.get(".qr-code")
     .should("be.visible")
-    .screenshot("qr-code", { overwrite: true });
+    .screenshot(screenshotName, { overwrite: true });
+  // Retrieve the actual screenshot path from the after:screenshot event
+  cy.task("getLastScreenshotPath").then((screenshotPath) => {
+    cy.wrap(screenshotPath).as("screenshotPath");
+  });
 });
 
 
@@ -35,8 +41,10 @@ When('I Generate a qrcode for text {string}', (s) => {
 
 Then('I should see the correct string returned', () => {
   cy.get("@inputValue").then((inputValue) => {
-    cy.readQRCode('./cypress/screenshots/qr-code.png').then((actualQRcodeValue) => {
-      cy.wrap(actualQRcodeValue).should("equal", inputValue);
+    cy.get("@screenshotPath").then((screenshotPath) => {
+      cy.task("readQRCode", screenshotPath).then((actualQRcodeValue) => {
+        cy.wrap(actualQRcodeValue).should("equal", inputValue);
+      });
     });
   });
 });
