@@ -13,7 +13,13 @@
     "@badeball/cypress-cucumber-preprocessor": "^24.0.0",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
     "cypress": "^15.7.1",
+    "cypress-real-events": "^1.13.0",
     "jimp": "^1.6.0",
     "jsqr": "^1.4.0"
+  },
+  "cypress-cucumber-preprocessor": {
+    "stepDefinitions": [
+      "cypress/support/step_definitions/**/*.js"
+    ]
   }
 }

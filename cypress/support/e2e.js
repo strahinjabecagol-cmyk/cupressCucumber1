@@ -15,3 +15,4 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+// import 'cypress-real-events' // Uncomment after running: npm install -D cypress-real-events
