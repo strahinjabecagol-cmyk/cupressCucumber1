@@ -54,24 +54,51 @@ Feature: testing TODO app
 
   Scenario: Should allow toggling tasks between completed and active states
     Given TODO app page is open
+    When I add "1" tasks
+    And I mark "1" tasks as done
+    Then the task should be in "completed" state
+    When I toggle task "1" back to active
+    Then the task should be in "active" state
 
   Scenario: Should handle very long task descriptions
     Given TODO app page is open
+    When I add a task with "200" characters
+    Then the task should be displayed correctly
 
   Scenario: Should handle special characters and emojis in task descriptions
     Given TODO app page is open
+    When I add a task with text "Test @#$%^&*() émoji 🎉🚀"
+    Then the task with text "Test @#$%^&*() émoji 🎉🚀" should be visible
 
   Scenario: Should properly escape HTML and prevent XSS in task descriptions
     Given TODO app page is open
+    When I add a task with text "<script>alert('xss')</script>"
+    Then the task should display as plain text "<script>alert('xss')</script>"
+    And no script should be executed
 
   Scenario: Should maintain correct filter state when deleting tasks
     Given TODO app page is open
+    When I add "3" tasks
+    And I mark "1" tasks as done
+    And filter by "active"
+    And I delete "1" tasks
+    Then only "active" tasks should be visible
+    And there should be "1" tasks in the list
 
   Scenario: Should correctly display "All" filter with mixed completed and active tasks
     Given TODO app page is open
+    When I add "3" tasks
+    And I mark "2" tasks as done
+    And filter by "all"
+    Then there should be "3" tasks in the list
+    And there should be "2" completed tasks visible
+    And there should be "1" active tasks visible
 
   Scenario: Should display empty state message when no tasks exist
     Given TODO app page is open
+    Then There should be no active tasks visible message
 
   Scenario: Should clear input field after adding a task
     Given TODO app page is open
+    When I add "1" tasks
+    Then the input field should be empty

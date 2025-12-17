@@ -51,22 +51,19 @@ Then('There should be total of {string} tasks remaining {string} active', (int, 
 
 Then('only {string} tasks should be visible', (s) => {
     if (s == "completed") {
-        // All visible tasks should have completed state
+        cy.get('li.todo:visible').should('have.length.at.least', 1);
         cy.get('li.todo:visible').each((element) => {
             cy.wrap(element).find('.chk').should('have.attr', 'aria-pressed', 'true');
         });
-        cy.get('li.todo:visible').should('have.length', 1);
     }
     else if (s == "active") {
-        // All visible tasks should NOT have completed state
+        cy.get('li.todo:visible').should('have.length.at.least', 1);
         cy.get('li.todo:visible').each((element) => {
             cy.wrap(element).find('.chk').should('have.attr', 'aria-pressed', 'false');
         });
-        cy.get('li.todo:visible').should('have.length', 2);
     }
     else if (s == "all") {
-        // Should show all tasks (both completed and active)
-        cy.get('li.todo:visible').should('have.length', 3);
+        cy.get('li.todo:visible').should('have.length.at.least', 1);
     }
 });
 
@@ -98,4 +95,61 @@ When('I add {string} task by pressing enter', (s) => {
     }
 })
 
+When('I toggle task {string} back to active', (s) => {
+    cy.get('.chk').eq(s - 1).click();
+})
 
+When('I add a task with {string} characters', (s) => {
+    const longText = 'a'.repeat(parseInt(s));
+    cy.get('#newTodo').type(longText);
+    cy.get('#addTodo').click();
+    cy.wrap(longText).as('longTaskText');
+})
+
+Then('the task should be displayed correctly', () => {
+    cy.get('@longTaskText').then((longText) => {
+        cy.get('li.todo').first().should('contain.text', longText);
+    });
+})
+
+When('I add a task with text {string}', (s) => {
+    cy.get('#newTodo').type(s);
+    cy.get('#addTodo').click();
+})
+
+Then('the task with text {string} should be visible', (s) => {
+    cy.get('li.todo').should('contain.text', s);
+})
+
+Then('the task should display as plain text {string}', (s) => {
+    cy.get('li.todo').should('contain.text', s);
+})
+
+Then('no script should be executed', () => {
+    cy.get('li.todo').first().find('script').should('not.exist');
+})
+
+Then('there should be {string} tasks in the list', (s) => {
+    cy.get('li.todo:visible').should('have.length', parseInt(s));
+})
+
+Then('there should be {string} completed tasks visible', (s) => {
+    cy.get('li.todo:visible .chk[aria-pressed="true"]').should('have.length', parseInt(s));
+})
+
+Then('there should be {string} active tasks visible', (s) => {
+    cy.get('li.todo:visible .chk[aria-pressed="false"]').should('have.length', parseInt(s));
+})
+
+Then('the input field should be empty', () => {
+    cy.get('#newTodo').should('have.value', '');
+})
+
+Then('the task should be in {string} state', (s) => {
+    if (s == "completed") {
+        cy.get('li.todo:visible .chk').should('have.attr', 'aria-pressed', 'true');
+    }
+    else if (s == "active") {
+        cy.get('li.todo:visible .chk').should('have.attr', 'aria-pressed', 'false');
+    }
+})
